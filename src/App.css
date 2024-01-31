@@ -16,6 +16,7 @@
 .new-todo {
   display: flex;
   flex-direction: column;
+  min-width: 300px;
 }
 
 label {
@@ -53,6 +54,7 @@ input {
   border: 1px solid white;
   border-radius: 12px;
   padding: 6px 12px;
+  min-width: 300px;
 }
 
 .icons {
@@ -74,4 +76,13 @@ input {
 .delete:hover {
   cursor: pointer;
   color: red;
+}
+
+.edit:hover {
+  cursor: pointer;
+  color: gray;
+}
+
+.hidden {
+  opacity: 0%;
 }

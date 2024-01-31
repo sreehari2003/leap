@@ -1,15 +1,25 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import "./App.css";
 import { NewTodo } from "./components/NewTodo";
 import { useTask } from "./hooks/useTask";
-import { IconDelete } from "./components/Delete";
 import { useDelete } from "./hooks/useDelete";
-import { IconTickCircle } from "./components/Complete";
+import type { Task } from "./types";
+import { Task as TaskList } from "./components/Task";
 
 function App() {
   const [newTodoOpen, setOpen] = useState(false);
-  const { isLoading, data, setTask } = useTask();
-  const { deleteTask } = useDelete();
+  const { isLoading, data, setTask, removeTodo, updateTodo, getTodo } =
+    useTask();
+  const { deleteTask } = useDelete(removeTodo);
+
+  const handleUpdate = useCallback((info: Task) => {
+    setTask((prev) => [...prev, info]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const listIsEmpty = useMemo(() => {
+    return !data.length || data.every((el) => el.complete);
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -30,26 +40,28 @@ function App() {
             New Task
           </button>
         )}
-        {newTodoOpen && <NewTodo cancelTodo={setOpen} setTodo={setTask} />}
+        {newTodoOpen && <NewTodo cancelTodo={setOpen} setTodo={handleUpdate} />}
         <section>
-          <h4 className="sub-head">Todos</h4>
+          {!listIsEmpty && <h4 className="sub-head">Todos</h4>}
           <div className="todo-list">
             {data.length &&
-              data.map((el) => (
-                <div key={el.todoId} className="list">
-                  <div className="title">
-                    <h3>{el.todoTitle}</h3>
-                    <div className="icons">
-                      <IconDelete
-                        onClick={() => deleteTask(el.todoId)}
-                        className="delete"
-                      />
-                      <IconTickCircle className="tick" />
-                    </div>
-                  </div>
-                  <p>{el.todoDescription}</p>
-                </div>
-              ))}
+              data.map((el) => {
+                if (!el.complete) {
+                  return (
+                    <TaskList
+                      title={el.todoTitle}
+                      description={el.todoDescription}
+                      id={el.todoId}
+                      endDate={el.todoDate}
+                      deleteTask={deleteTask}
+                      key={el.todoId}
+                      updateTodo={updateTodo}
+                      getTodo={getTodo}
+                    />
+                  );
+                }
+              })}
+            {listIsEmpty && <h4>No task left</h4>}
           </div>
         </section>
       </main>

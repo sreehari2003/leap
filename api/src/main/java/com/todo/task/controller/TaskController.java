@@ -78,4 +78,13 @@ public class TaskController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseTask<Task>> updateTask(@PathVariable Long id, @RequestBody Task entity) {
+        Task updatedTaskResult = taskService.updateTask(id, entity);
+
+        ResponseTask<Task> responseTodoList = new ResponseTask<>("Item updated", HttpStatus.OK, updatedTaskResult);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseTodoList);
+    }
+
 }

@@ -18,6 +18,22 @@ export const useTask = () => {
     }
   };
 
+  const updateTodo = (id: number, updatedTaskProperties: Task) => {
+    const updatedTasks = allTasks.map((task) => {
+      if (task.todoId === id) {
+        return { ...task, ...updatedTaskProperties };
+      }
+      return task;
+    });
+
+    setTask(updatedTasks);
+  };
+
+  const removeTodo = (id: number) => {
+    const updatedTasks = allTasks.filter((task) => task.todoId !== id);
+    setTask(updatedTasks);
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -41,5 +57,7 @@ export const useTask = () => {
     updateData: setTask,
     getTodo,
     setTask,
+    removeTodo,
+    updateTodo,
   };
 };

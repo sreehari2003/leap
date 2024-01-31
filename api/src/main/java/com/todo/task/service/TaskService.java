@@ -3,6 +3,8 @@ package com.todo.task.service;
 import com.todo.task.model.Task;
 import com.todo.task.repository.TaskRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -42,6 +44,18 @@ public class TaskService {
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public Task updateTask(Long taskId, Task updatedTask) {
+        Task existingTask = taskRepository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found with id: " + taskId));
+
+        // Update the fields of the existing task with the values from the updated task
+        existingTask.setTodoTitle(updatedTask.getTodoTitle());
+        existingTask.setTodoDescription(updatedTask.getTodoDescription());
+        existingTask.setComplete(updatedTask.isComplete());
+
+        return taskRepository.save(existingTask);
     }
 
     public String test() {
