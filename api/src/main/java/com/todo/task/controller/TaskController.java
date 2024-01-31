@@ -2,10 +2,14 @@ package com.todo.task.controller;
 
 import com.todo.task.model.Task;
 import com.todo.task.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+
+// import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tasks")

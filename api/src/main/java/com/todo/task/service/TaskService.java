@@ -2,15 +2,18 @@ package com.todo.task.service;
 
 import com.todo.task.model.Task;
 import com.todo.task.repository.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+// import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+// import java.util.Optional;
 
 @Service
 public class TaskService {
 
-    @Autowired
+    // @Autowired
     private TaskRepository taskRepository;
 
     public Iterable<Task> getAllTasks() {
@@ -27,5 +30,9 @@ public class TaskService {
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public String test() {
+        return "test";
     }
 }
