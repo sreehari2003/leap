@@ -12,12 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 // import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/tasks")
 public class TaskController {
     private static final Logger logger = Logger.getLogger(TaskController.class.getName());
@@ -25,8 +24,19 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping
-    public Optional<Iterable<Task>> getAllTasks() {
-        return taskService.getAllTasks();
+    public ResponseEntity<ResponseTask<Iterable<Task>>> getAllTasks() {
+        Optional<Iterable<Task>> tasks = taskService.getAllTasks();
+        if (tasks != null) {
+            ResponseTask<Iterable<Task>> responseTodoList = new ResponseTask<>("Item added to todo list", HttpStatus.OK,
+                    tasks.get());
+            logger.info(responseTodoList.getMessage() + ". code: " + responseTodoList.getCode());
+            return new ResponseEntity<ResponseTask<Iterable<Task>>>(responseTodoList, HttpStatus.OK);
+        } else {
+            ResponseTask<Iterable<Task>> responseTodoList = new ResponseTask<>("Couldnt find the tasks",
+                    HttpStatus.BAD_REQUEST, null);
+            logger.info(responseTodoList.getMessage() + ". code: " + responseTodoList.getCode());
+            return new ResponseEntity<>(responseTodoList, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
@@ -35,32 +45,37 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseTask> AddItemTolist(@Valid @RequestBody Task task) {
+    public ResponseEntity<ResponseTask<Optional<Task>>> AddItemTolist(@Valid @RequestBody Task task) {
 
-        Optional<Task> t = taskService.saveTask(task);
+        Optional<Task> savedTask = taskService.saveTask(task);
 
-        if (t != null) {
-            ResponseTask responseTodoList = new ResponseTask("Item added to todo list", HttpStatus.CREATED);
+        if (savedTask.isPresent()) {
+            ResponseTask<Optional<Task>> responseTodoList = new ResponseTask<>("Item added to todo list",
+                    HttpStatus.CREATED,
+                    savedTask);
             logger.info(responseTodoList.getMessage() + ". code: " + responseTodoList.getCode());
-            return new ResponseEntity<ResponseTask>(responseTodoList, HttpStatus.CREATED);
-
+            return new ResponseEntity<>(responseTodoList, HttpStatus.CREATED);
         } else {
-            ResponseTask responseTodoList = new ResponseTask("Item Not added to todo list",
-                    HttpStatus.BAD_REQUEST);
+
+            ResponseTask<Optional<Task>> responseTodoList = new ResponseTask<>("Item Not added to todo list",
+                    HttpStatus.BAD_REQUEST, null);
             logger.info(responseTodoList.getMessage() + ". code: " + responseTodoList.getCode());
-            return new ResponseEntity<ResponseTask>(responseTodoList, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(responseTodoList, HttpStatus.BAD_REQUEST);
         }
 
     }
 
-    // @PutMapping("/{id}")
-    // public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
-    // // TODO: Implement update logic
-    // return taskService.saveTask(task);
-    // }
-
     @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
+    public ResponseEntity<ResponseTask<Void>> deleteTask(@PathVariable Long id) {
+        try {
+            taskService.deleteTask(id);
+            ResponseTask<Void> response = new ResponseTask<>("Item deleted from todo list", HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            ResponseTask<Void> response = new ResponseTask<>("Failed to delete item from todo list",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 }

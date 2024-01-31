@@ -1,35 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import { NewTodo } from "./components/NewTodo";
+import { useTask } from "./hooks/useTask";
+import { IconDelete } from "./components/Delete";
+import { useDelete } from "./hooks/useDelete";
+import { IconTickCircle } from "./components/Complete";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [newTodoOpen, setOpen] = useState(false);
+  const { isLoading, data, setTask } = useTask();
+  const { deleteTask } = useDelete();
+
+  if (isLoading) {
+    return (
+      <div className="container">
+        <main className="main">
+          <h3>Loading</h3>
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="container">
+      <h1>Task App</h1>
+      <main className="main">
+        {!newTodoOpen && (
+          <button className="btn btn-primary" onClick={() => setOpen(true)}>
+            New Task
+          </button>
+        )}
+        {newTodoOpen && <NewTodo cancelTodo={setOpen} setTodo={setTask} />}
+        <section>
+          <h4 className="sub-head">Todos</h4>
+          <div className="todo-list">
+            {data.length &&
+              data.map((el) => (
+                <div key={el.todoId} className="list">
+                  <div className="title">
+                    <h3>{el.todoTitle}</h3>
+                    <div className="icons">
+                      <IconDelete
+                        onClick={() => deleteTask(el.todoId)}
+                        className="delete"
+                      />
+                      <IconTickCircle className="tick" />
+                    </div>
+                  </div>
+                  <p>{el.todoDescription}</p>
+                </div>
+              ))}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
