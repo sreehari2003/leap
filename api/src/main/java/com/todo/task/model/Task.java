@@ -1,74 +1,113 @@
 package com.todo.task.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import java.time.LocalDateTime; // Import for LocalDateTime
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
+@Table(name = "todo")
+@AllArgsConstructor
+@NoArgsConstructor
+
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private String description;
-    private boolean completed;
-    private LocalDateTime createdAt; // Use java.time.LocalDateTime for timestamp
+    @SequenceGenerator(name = "todo_seq", initialValue = 1110, allocationSize = 101)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "todo_seq")
+    @Column(name = "todo_item_id", updatable = false, nullable = false)
+    private long TodoId;
 
-    // Constructors, getters, setters, and other methods
+    @NotBlank
+    @Size(min = 5, message = "A Description should have at least 5 characters")
+    @Column(name = "todo_title")
+    private String todoTitle;
 
-    // Constructors, getters, setters, an
+    @NotBlank
+    @Size(min = 5, message = "A Description should have at least 5 characters")
+    @Column(name = "todo_description")
+    private String todoDescription;
 
-    public Task() {
-        // Default constructor
+    @Column(name = "is_complete")
+    private boolean isComplete;
+
+    @FutureOrPresent
+    @Column(name = "todo_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date todoDate;
+
+    @Column(name = "creation_date", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @CreationTimestamp
+    private Date creationDate;
+
+    @Column(name = "update_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @UpdateTimestamp
+    private Date updateDate;
+
+    public boolean isComplete() {
+        return isComplete;
     }
 
-    public Task(String title, String description, boolean completed, LocalDateTime createdAt) {
-        this.title = title; // Using the title field in the constructor
-        this.description = description;
-        this.completed = completed;
-        this.createdAt = createdAt;
+    public void setComplete(boolean complete) {
+        isComplete = complete;
     }
 
-    // Getters and setters for all fields
-    public Long getId() {
-        return id;
+    public long getTodoId() {
+        return TodoId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTodoId(long todoId) {
+        TodoId = todoId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTodoTitle() {
+        return todoTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTodoTitle(String todoTitle) {
+        this.todoTitle = todoTitle;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTodoDescription() {
+        return todoDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTodoDescription(String todoDescription) {
+        this.todoDescription = todoDescription;
     }
 
-    public boolean isCompleted() {
-        return completed;
+    public Date getTodoDate() {
+        return todoDate;
     }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
+    public void setTodoDate(Date todoDate) {
+        this.todoDate = todoDate;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

@@ -5,7 +5,6 @@ import com.todo.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,7 +15,7 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping
-    public List<Task> getAllTasks() {
+    public Iterable<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
 
