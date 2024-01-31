@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories
 @EntityScan(basePackages = "com.todo.task.model")
-@ComponentScan(basePackages = "com.todo.task.*")
+@ComponentScan(basePackages = "com.todo")
 public class TaskApplication {
 
 	public static void main(String[] args) {
