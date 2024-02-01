@@ -1,1 +1,1 @@
-export const END_POINT = "http://localhost:8080/api";
+export const END_POINT = "https://leap-production.up.railway.app/api";
