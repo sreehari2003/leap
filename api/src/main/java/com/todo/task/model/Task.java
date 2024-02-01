@@ -31,7 +31,7 @@ public class Task {
     private boolean isComplete;
 
     @Column(name = "todo_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date todoDate;
 

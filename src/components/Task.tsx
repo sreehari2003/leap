@@ -7,6 +7,16 @@ import { Task as TaskType } from "../types";
 import { toast } from "sonner";
 import { END_POINT } from "../constanst";
 
+interface Prop {
+  title: string;
+  description: string;
+  id: number;
+  endDate: Date;
+  deleteTask: (id: number) => Promise<void>;
+  updateTodo: (id: number, updatedTaskProperties: TaskType) => void;
+  getTodo: () => Promise<void>;
+}
+
 export const Task = ({
   id,
   title,
@@ -73,13 +83,3 @@ export const Task = ({
     </div>
   );
 };
-
-interface Prop {
-  title: string;
-  description: string;
-  id: number;
-  endDate: Date;
-  deleteTask: (id: number) => Promise<void>;
-  updateTodo: (id: number, updatedTaskProperties: TaskType) => void;
-  getTodo: () => Promise<void>;
-}

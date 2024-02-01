@@ -136,7 +136,11 @@ export const NewTodo = ({
         type="date"
         placeholder="date"
         ref={dateRef}
-        defaultValue={defaultValue?.todoDate + ""}
+        defaultValue={
+          defaultValue?.todoDate
+            ? new Date(defaultValue.todoDate).toISOString().split("T")[0]
+            : ""
+        }
       />
       <div className="group">
         <button

@@ -86,3 +86,23 @@ input {
 .hidden {
   opacity: 0%;
 }
+
+.load {
+  display: flex;
+  flex-direction: row;
+  min-height: 400px;
+  align-items: end;
+}
+.loader {
+  font-size: 30px;
+  animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

@@ -5,6 +5,7 @@ import { useTask } from "./hooks/useTask";
 import { useDelete } from "./hooks/useDelete";
 import type { Task } from "./types";
 import { Task as TaskList } from "./components/Task";
+import { IconBxLoaderCircle } from "./components/Loader";
 
 function App() {
   const [newTodoOpen, setOpen] = useState(false);
@@ -24,8 +25,8 @@ function App() {
   if (isLoading) {
     return (
       <div className="container">
-        <main className="main">
-          <h3>Loading</h3>
+        <main className="main load">
+          <IconBxLoaderCircle className="loader" />
         </main>
       </div>
     );
@@ -44,9 +45,10 @@ function App() {
         <section>
           {!listIsEmpty && <h4 className="sub-head">Todos</h4>}
           <div className="todo-list">
-            {data.length &&
+            {data.length > 0 &&
               data.map((el) => {
                 if (!el.complete) {
+                  // only show task which are not completed
                   return (
                     <TaskList
                       title={el.todoTitle}
